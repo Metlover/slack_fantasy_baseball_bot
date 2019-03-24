@@ -8,9 +8,9 @@ import json
 
 #Much of the code for this bot comes from the template here: https://www.fullstackpython.com/blog/build-first-slack-bot-python.html
 
-slack_client = SlackClient('xoxb-149073309748-584365571427-WAc3YF3vQjfeDDzQ4RkIwaka') #Put your bot user Oath token here. If you're confused about what that is, see the readme.
+slack_client = SlackClient('') #Put your bot user Oath token here. If you're confused about what that is, see the readme.
 enable_emojis = True #If you enable this, you need to list in order the emojis corresponding to each team code below, as well as a free agent emoji (usually the :baseball: emoji).
-channel_id = 'GGM9DV8G0' #Put the channel ID where you want fantasy updates posted automatically. If you're confused about what this is and where to find it, see the readme.
+channel_id = '' #Put the channel ID where you want fantasy updates posted automatically. If you're confused about what this is and where to find it, see the readme.
 
 emoji_map_a = ['ARI','ATL','BAL','BOS','CHC','CIN','CLE','COL','CWS','DET','HOU','KC\"','LAA','LAD','MIA','MIL','MIN','NYM','NYY','OAK','PHI','PIT','SD\"','SEA','SF\"','STL','TB\"','TEX','TOR','WAS','FA\"']
 #these codes should be the text that corresponds to each teams' emoji in your workspace. These are currently the ones that mine uses.
