@@ -8,9 +8,9 @@ import json
 
 #Much of the code for this bot comes from the template here: https://www.fullstackpython.com/blog/build-first-slack-bot-python.html
 
-slack_client = SlackClient('') #Put your bot user Oath token here. If you're confused about what that is, see the readme.
-enable_emojis = False #If you enable this, you need to list in order the emojis corresponding to each team code below, as well as a free agent emoji (usually the :baseball: emoji).
-channel_id = '' #Put the channel ID where you want fantasy updates posted automatically. If you're confused about what this is and where to find it, see the readme.
+slack_client = SlackClient('xoxb-149073309748-584365571427-WAc3YF3vQjfeDDzQ4RkIwaka') #Put your bot user Oath token here. If you're confused about what that is, see the readme.
+enable_emojis = True #If you enable this, you need to list in order the emojis corresponding to each team code below, as well as a free agent emoji (usually the :baseball: emoji).
+channel_id = 'GGM9DV8G0' #Put the channel ID where you want fantasy updates posted automatically. If you're confused about what this is and where to find it, see the readme.
 
 emoji_map_a = ['ARI','ATL','BAL','BOS','CHC','CIN','CLE','COL','CWS','DET','HOU','KC\"','LAA','LAD','MIA','MIL','MIN','NYM','NYY','OAK','PHI','PIT','SD\"','SEA','SF\"','STL','TB\"','TEX','TOR','WAS','FA\"']
 #these codes should be the text that corresponds to each teams' emoji in your workspace. These are currently the ones that mine uses.
@@ -138,31 +138,34 @@ if __name__ == "__main__": #main function
         starterbot_id = slack_client.api_call("auth.test")["user_id"]
         news = initial_news_list()
         while True:
-            latest_news_item = latest_news()
-            if not any(d['News'] == latest_news_item['News'] for d in news):
-                if(enable_emojis):
-                    attachment = json.dumps([{"title": latest_news_item["Name"] + ' :' + emoji_map_b[emoji_map_a.index(latest_news_item["Team"])] + ": — " + latest_news_item["Headline"],
-                        "text": latest_news_item["Date"] + ' — ' + latest_news_item["News"],
-                        "mrkdwn_in": [
-                            "text",
-                            "pretext"
-                            ]}])
-                else:
-                    attachment = json.dumps([{"title": latest_news_item["Name"] + ' — ' + latest_news_item["Headline"],
-                        "text": latest_news_item["Date"] + ' — ' + latest_news_item["News"],
-                        "mrkdwn_in": [
-                            "text",
-                            "pretext"
-                            ]}])
-                slack_client.api_call(
-                    "chat.postMessage",
-                    channel=channel_id,
-                    attachments=attachment
-                    )
-                news.append(latest_news_item)
-            command, channel = parse_bot_commands(slack_client.rtm_read())
-            if command:
-                handle_command(command, channel)
-            time.sleep(RTM_READ_DELAY)
+            try:
+                latest_news_item = latest_news()
+                if not any(d['News'] == latest_news_item['News'] for d in news):
+                    if(enable_emojis):
+                        attachment = json.dumps([{"title": latest_news_item["Name"] + ' :' + emoji_map_b[emoji_map_a.index(latest_news_item["Team"])] + ": — " + latest_news_item["Headline"],
+                            "text": latest_news_item["Date"] + ' — ' + latest_news_item["News"],
+                            "mrkdwn_in": [
+                                "text",
+                                "pretext"
+                                ]}])
+                    else:
+                        attachment = json.dumps([{"title": latest_news_item["Name"] + ' — ' + latest_news_item["Headline"],
+                            "text": latest_news_item["Date"] + ' — ' + latest_news_item["News"],
+                            "mrkdwn_in": [
+                                "text",
+                                "pretext"
+                                ]}])
+                    slack_client.api_call(
+                        "chat.postMessage",
+                        channel=channel_id,
+                        attachments=attachment
+                        )
+                    news.append(latest_news_item)
+                command, channel = parse_bot_commands(slack_client.rtm_read())
+                if command:
+                    handle_command(command, channel)
+                time.sleep(RTM_READ_DELAY)
+            except WebSocketConnectionClosedException:
+                slack_client.rtm_connect()
     else:
         print("Connection failed. Exception traceback printed above.")
